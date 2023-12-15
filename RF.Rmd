@@ -45,6 +45,9 @@ Para ello, vamos a utilizar la librería **ranger**, que es una versión optimiz
 
 ```{r}
 rf <- ranger(label~., data=data_train, num.trees=50, importance="impurity")
+save(rf, file="random_forest.RData") # Guardo mi modelo
+# Para volver a usarlo, descomentar
+#rf_saved <- load("random_forest.RData")
 print(rf)
 #importance(rf)
 ```
