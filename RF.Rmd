@@ -1,0 +1,67 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+# Random Forest
+
+```{r}
+library (caret)
+library(ranger)
+```
+
+```{r}
+data <- read.csv("train.csv")
+test_df <- read.csv("test.csv")
+
+data$label <- as.factor(data$label)
+summary(data$label)
+
+dim(train)
+View(test_df)
+```
+
+## División conjunto test y train
+
+```{r}
+set.seed(33)
+
+train_perc <- 0.75
+train_index <- createDataPartition(data$label, p=train_perc, list=FALSE)
+
+data_train <- data[train_index,]
+data_test <- data[-train_index,]
+```
+
+## Funciones de ayuda
+
+```{r}
+rotate <- function(x) t(apply(x, 2, rev))
+```
+
+```{r}
+sample_4 <- matrix(as.numeric(data[4,-1]), nrow = 28, byrow = TRUE)
+sample_7 <- matrix(as.numeric(data[7,-1]), nrow = 28, byrow = TRUE)
+image(rotate(sample_4), col = grey.colors(255))
+image(rotate(sample_7), col = grey.colors(255))
+```
+
+## Random Forest
+
+```{r}
+rf <- ranger(label~., data=data_train, num.trees=50, importance="impurity")
+print(rf)
+#importance(rf)
+```
+
+```{r}
+prediction_rf<- predict(rf, data_test)
+
+confussion_matrix_rf <- table(data_test$label, prediction_rf$predictions)
+confussion_matrix_rf
+```
+
+```{r}
+accuracy_rf <- mean(prediction_rf$predictions == data_test$label)
+accuracy_rf # 0.96
+```
