@@ -12,22 +12,126 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
+# Digit recognition
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
+```{r}
+library (caret)
+library(ranger)
+library(nnet)
 ```
 
-## Including Plots
+```{r}
+data <- read.csv("train.csv")
+test_df <- read.csv("test.csv")
 
-You can also embed plots, for example:
+data$label <- as.factor(data$label)
+summary(data$label)
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+dim(train)
+#View(test_df)
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+## División conjunto test y train
+
+```{r}
+set.seed(33)
+
+train_perc <- 0.75
+train_index <- createDataPartition(data$label, p=train_perc, list=FALSE)
+
+data_train <- data[train_index,]
+data_test <- data[-train_index,]
+```
+
+## Funciones de ayuda
+
+```{r}
+rotate <- function(x) t(apply(x, 2, rev))
+```
+
+Mostramos un par de imagenes de prueba
+
+```{r}
+sample_4 <- matrix(as.numeric(data[4,-1]), nrow = 28, byrow = TRUE)
+sample_7 <- matrix(as.numeric(data[7,-1]), nrow = 28, byrow = TRUE)
+image(rotate(sample_4), col = grey.colors(255))
+
+```
+
+```{r}
+image(rotate(sample_7), col = grey.colors(255))
+```
+
+## Random Forest
+
+El segundo algoritmo que vamos a utilizar es el de Random Forest, que consiste en construir múltiples árboles de decisión durante el entrenamiento y combinar sus resultados para obtener predicciones más precisas.
+
+Para ello, vamos a utilizar la librería **ranger**, que es una versión optimizada de **randomForest**, con los siguientes parámetros:
+
+-   *num.trees=50*: El número de árboles que hemos indicado es 50, pues al incrementar este valor el tiempo de ejecución crece significativamente, mientras que el accuracity se muestra prácticamente invariable.
+
+-   *importance="impurity"*: este parámetro se utiliza para indicar si se deben calcular las importancias de las variables. Su valor por defecto es "none". Sin embargo, para nuestro modelo le hemos indicado que calcule la importancia de las variables basándose en la medida de impureza de Gini o ganancia de varianza.
+
+```{r}
+if (!file.exists("random_forest.rds")) {
+  
+  # Entrenamos modelo
+  rf <- ranger(label ~ ., data = data_train, num.trees = 50, importance = "impurity")
+  
+  # Guardamos modelo
+  saveRDS(rf, file = "random_forest.rds")
+  
+} else {
+  # cargamos modelo 
+  rf <- readRDS("random_forest.rds")
+}
+
+print(rf)
+# importance(rf)
+```
+
+```{r}
+prediction_rf<- predict(rf, data_test)
+
+confussion_matrix_rf <- table(data_test$label, prediction_rf$predictions)
+confussion_matrix_rf
+```
+
+```{r}
+accuracy_rf <- mean(prediction_rf$predictions == data_test$label)
+cat("Accuracy with random forest:", accuracy_rf) # 0.96
+```
+
+## Red neuronal sencilla
+
+```{r}
+
+if (!file.exists("simple_nnet_model.rds")) {
+  
+  # Entrenamos modelo
+  simple_nnet <- multinom(label ~ ., data=data_train, MaxNWts=10000, decay=5e-3, maxit=100)
+  
+  # Guardamos modelo
+  saveRDS(simple_nnet, file = "simple_nnet_model.rds")
+  
+} else {
+  # cargamos modelo 
+  simple_nnet <- readRDS("simple_nnet_model.rds")
+}
+```
+
+```{r}
+prediction_simple_nnet <- predict(simple_nnet, data_test, type = "class")
+prediction_simple_nnet[1:4]
+data_test$label[1:4]
+
+confussion_matrix <- table(data_test$label, prediction_simple_nnet)
+confussion_matrix
+```
+
+```{r}
+accuracy_simple_nnet <- mean(prediction_simple_nnet == data_test$label)
+accuracy_simple_nnet
+
+# Obtenemos un accuracy cercano al 90% no está mal pero vamos a intentar mejorarlo
+```
