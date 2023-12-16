@@ -18,6 +18,7 @@ knitr::opts_chunk$set(echo = TRUE)
 library (caret)
 library(ranger)
 library(nnet)
+library(mlbench)
 ```
 
 ```{r}
@@ -102,7 +103,131 @@ accuracy_rf <- mean(prediction_rf$predictions == data_test$label)
 cat("Accuracy with random forest:", accuracy_rf) # 0.96
 ```
 
-## Miguel Ángel
+## Boosting
+
+A continuación, usaremos tres algoritmos distintos de *boosting*: C5.0, AdaBoost.M1 y Boosted Linear Model.
+
+Usaremos para ello la librería *caret* junto con las librerías *adabag*, *plyr*, *bst* y *C50*.
+
+### Entrenamiento
+
+```{r}
+control <- trainControl(method = "repeatedcv", number = 10, repeats = 3)
+set.seed(Sys.time())
+metric <- "Accuracy"
+```
+
+#### C5.0
+
+```{r}
+grid <- expand.grid(trials = c(1, 10, 20),
+                    model = c("tree", "rules"),
+                    winnow = c(TRUE, FALSE))
+if (file.exists("boosting_c50.rds")) {
+  model_c50 <- readRDS(file = "boosting_c50.rds")
+} else {
+  model_c50 <- train(label ~ .,
+                     data = data_train[1:1000, ],
+                     method = "C5.0",
+                     metric = metric,
+                     tuneGrid = grid,
+                     trControl = control)
+  saveRDS(model_c50, file = "boosting_c50.rds")
+}
+```
+
+#### AdaBoost.M1
+
+```{r}
+grid <- expand.grid(mfinal = (1:3) * 3,
+                    maxdepth = c(1, 3),
+                    coeflearn = c("Breiman"))
+if (file.exists("boosting_adaboost.rds")) {
+  model_adaboost <- readRDS(file = "boosting_adaboost.rds")
+} else {
+  model_adaboost <- train(label ~ .,
+                          data = data_train[1:1000, ],
+                          method = "AdaBoost.M1",
+                          metric = metric,
+                          tuneGrid = grid,
+                          trControl = control)
+  saveRDS(model_adaboost, file = "boosting_adaboost.rds")
+}
+```
+
+#### Boosted Linear Model
+
+```{r}
+grid <- expand.grid(mstop = 150,
+                    nu = 0.01)
+if (file.exists("boosting_bstlm.rds")) {
+  model_bstlm <- readRDS(file = "boosting_bstlm.rds")
+} else {
+  model_bstlm <- train(label ~ .,
+                       data = data_train,
+                       method = "BstLm",
+                       metric = metric,
+                       tuneGrid = grid,
+                       trControl = control)
+  saveRDS(model_bstlm, file = "boosting_bstlm.rds")
+}
+```
+
+### Resultados
+
+```{r}
+results <- resamples(list(c50 = model_c50,
+                          adaboost = model_adaboost,
+                          bstlm = model_bstlm))
+summary(results)
+dotplot(results)
+```
+
+### Test
+
+#### C5.0
+
+```{r}
+pred_c50 <- predict(model_c50, data_test[1:1000, ])
+conf_matrix_c50 <- table(data_test[1:1000, ]$label, pred_c50)
+```
+
+```{r}
+conf_matrix_c50
+accuracy_c50 <- mean(pred_c50 == data_test[1:1000, ]$label)
+cat("Accuracy with C5.0 boosting: ", accuracy_c50)
+```
+
+#### AdaBoost.M1
+
+```{r}
+pred_adaboost <- predict(model_adaboost, data_test[1:1000, ])
+conf_matrix_adaboost <- table(data_test[1:1000, ]$label, pred_adaboost)
+```
+
+```{r}
+conf_matrix_adaboost
+accuracy_adaboost <- mean(pred_adaboost == data_test[1:1000, ]$label)
+cat("Accuracy with AdaBoost.M1 boosting: ", accuracy_adaboost)
+```
+
+
+#### Boosted Linear Model
+
+```{r}
+pred_bstlm <- predict(model_bstlm, data_test)
+conf_matrix_bstlm <- table(data_test$label, pred_bstlm)
+```
+
+```{r}
+conf_matrix_bstlm
+accuracy_bstlm <- mean(pred_bstlm == data_test$label)
+cat("Accuracy with Boosted Linear Model boosting: ", accuracy_bstlm)
+```
+
+### Conclusión final
+
+De las tres posibilidades de boosting, el método C5.0 es el que más precisión reporta (alrededor del 90%)
 
 ## Red neuronal sencilla
 
