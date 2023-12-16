@@ -48,6 +48,8 @@ image(rotate(sample_7), col = grey.colors(255))
 ```{r}
 simple_nnet <- multinom(label ~ ., data=data_train, MaxNWts=10000, decay=5e-3, maxit=100)
 ```
+
+
 ```{r}
 prediction_simple_nnet <- predict(simple_nnet, data_test, type = "class")
 prediction_simple_nnet[1:4]
@@ -61,70 +63,5 @@ accuracy_simple_nnet <- mean(prediction_simple_nnet == data_test$label)
 accuracy_simple_nnet
 
 # Obtenemos un accuracy cercano al 90% no está mal pero vamos a intentar mejorarlo
-```
-
-## Deep Neural Network
-
-Instalación de paquetes
-
-```{r}
-# Data wrangling
-library(tidyverse)
-
-# Image manipulation
-library(imager)
-
-# Deep learning
-library(keras)
-
-# Model Evaluation
-library(caret)
-
-# use conda env
-#use_condaenv("r-tensorflow")
-
-options(scipen = 999)
-```
-
-
-```{r}
-
-library(keras)
-install_keras()
-
-model <- keras_model_sequential(name = "simple_model") %>% 
-  
-  # Convolution Layer
-  layer_conv_2d(filters = 32,
-                kernel_size = c(3,3),
-                padding = "same",
-                activation = "relu",
-                input_shape = c(28,28, 1) 
-                ) %>% 
-  
-  layer_batch_normalization() %>%
-
-  # Max Pooling Layer
-  layer_max_pooling_2d(pool_size = c(2,2)) %>% 
-  
-  # Flattening Layer
-  layer_flatten() %>% 
-  
-  # Dense Layer
-  layer_dense(units = 128,
-              activation = "relu") %>% 
-  layer_dropout(rate = 0.5) %>%  # Add dropout layer
-  
-  # Dense Layer
-  layer_dense(units = 64,
-              activation = "relu") %>%
-  layer_dropout(rate = 0.5) %>%  # Add dropout layer
-  
-  # Output Layer
-  layer_dense(units = 10,
-              activation = "softmax",
-              name = "Output")
-  
-model
 ```
 

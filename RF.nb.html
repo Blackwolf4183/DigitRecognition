@@ -1756,146 +1756,232 @@ display: none;
 <h1>Random Forest</h1>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeSAoY2FyZXQpXG5gYGAifQ== -->
-<pre class="r"><code>library (caret)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiTG9hZGluZyByZXF1aXJlZCBwYWNrYWdlOiBnZ3Bsb3QyXG5Mb2FkaW5nIHJlcXVpcmVkIHBhY2thZ2U6IGxhdHRpY2VcblJlZ2lzdGVyZWQgUzMgbWV0aG9kIG92ZXJ3cml0dGVuIGJ5ICdkYXRhLnRhYmxlJzpcbiAgbWV0aG9kICAgICAgICAgICBmcm9tXG4gIHByaW50LmRhdGEudGFibGUgICAgIFxuIn0= -->
-<pre><code>Loading required package: ggplot2
-Loading required package: lattice
-Registered S3 method overwritten by &#39;data.table&#39;:
-  method           from
-  print.data.table     </code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShyYW5nZXIpXG5gYGAifQ== -->
-<pre class="r"><code>library(ranger)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZGF0YSA8LSByZWFkLmNzdihcInRyYWluLmNzdlwiKVxudGVzdF9kZiA8LSByZWFkLmNzdihcInRlc3QuY3N2XCIpXG5cbmRhdGEkbGFiZWwgPC0gYXMuZmFjdG9yKGRhdGEkbGFiZWwpXG5zdW1tYXJ5KGRhdGEkbGFiZWwpXG5gYGAifQ== -->
-<pre class="r"><code>data &lt;- read.csv(&quot;train.csv&quot;)
-test_df &lt;- read.csv(&quot;test.csv&quot;)
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxubGlicmFyeSAoY2FyZXQpXG5gYGBcbmBgYCJ9 -->
+<pre class="r"><code>```r
+library (caret)</code></pre>
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+&lt;!-- rnb-output-begin eyJkYXRhIjoiTG9hZGluZyByZXF1aXJlZCBwYWNrYWdlOiBnZ3Bsb3QyXG5Mb2FkaW5nIHJlcXVpcmVkIHBhY2thZ2U6IGxhdHRpY2VcblJlZ2lzdGVyZWQgUzMgbWV0aG9kIG92ZXJ3cml0dGVuIGJ5ICdkYXRhLnRhYmxlJzpcbiAgbWV0aG9kICAgICAgICAgICBmcm9tXG4gIHByaW50LmRhdGEudGFibGUgICAgIFxuIn0= --&gt;
+</code></pre>
+<p>Loading required package: ggplot2 Loading required package: lattice
+Registered S3 method overwritten by ‘data.table’: method from
+print.data.table</p>
+<pre><code>
+
+
+&lt;!-- rnb-output-end --&gt;
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxubGlicmFyeShyYW5nZXIpXG5gYGBcbmBgYCJ9 --&gt;
+
+```r
+```r
+library(ranger)</code></pre>
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuZGF0YSA8LSByZWFkLmNzdihcXHRyYWluLmNzdlxcKVxudGVzdF9kZiA8LSByZWFkLmNzdihcXHRlc3QuY3N2XFwpXG5cbmRhdGEkbGFiZWwgPC0gYXMuZmFjdG9yKGRhdGEkbGFiZWwpXG5zdW1tYXJ5KGRhdGEkbGFiZWwpXG5gYGBcbmBgYCJ9 --&gt;
+
+```r
+```r
+data &lt;- read.csv(\train.csv\)
+test_df &lt;- read.csv(\test.csv\)
 
 data$label &lt;- as.factor(data$label)
 summary(data$label)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiICAgMCAgICAxICAgIDIgICAgMyAgICA0ICAgIDUgICAgNiAgICA3ICAgIDggICAgOSBcbjQxMzIgNDY4NCA0MTc3IDQzNTEgNDA3MiAzNzk1IDQxMzcgNDQwMSA0MDYzIDQxODggXG4ifQ== -->
-<pre><code>   0    1    2    3    4    5    6    7    8    9 
-4132 4684 4177 4351 4072 3795 4137 4401 4063 4188 </code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZGltKHRyYWluKVxuYGBgIn0= -->
-<pre class="r"><code>dim(train)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiTlVMTFxuIn0= -->
-<pre><code>NULL</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuVmlldyh0ZXN0X2RmKVxuYGBgIn0= -->
-<pre class="r"><code>View(test_df)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<div id="división-conjunto-test-y-train" class="section level2">
-<h2>División conjunto test y train</h2>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc2V0LnNlZWQoMzMpXG5cbnRyYWluX3BlcmMgPC0gMC43NVxudHJhaW5faW5kZXggPC0gY3JlYXRlRGF0YVBhcnRpdGlvbihkYXRhJGxhYmVsLCBwPXRyYWluX3BlcmMsIGxpc3Q9RkFMU0UpXG5cbmRhdGFfdHJhaW4gPC0gZGF0YVt0cmFpbl9pbmRleCxdXG5kYXRhX3Rlc3QgPC0gZGF0YVstdHJhaW5faW5kZXgsXVxuYGBgIn0= -->
-<pre class="r"><code>set.seed(33)
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+&lt;!-- rnb-output-begin eyJkYXRhIjoiICAgMCAgICAxICAgIDIgICAgMyAgICA0ICAgIDUgICAgNiAgICA3ICAgIDggICAgOSBcbjQxMzIgNDY4NCA0MTc3IDQzNTEgNDA3MiAzNzk1IDQxMzcgNDQwMSA0MDYzIDQxODggXG4ifQ== --&gt;
+</code></pre>
+<p>0 1 2 3 4 5 6 7 8 9 4132 4684 4177 4351 4072 3795 4137 4401 4063
+4188</p>
+<pre><code>
+
+
+&lt;!-- rnb-output-end --&gt;
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuZGltKHRyYWluKVxuYGBgXG5gYGAifQ== --&gt;
+
+```r
+```r
+dim(train)</code></pre>
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+&lt;!-- rnb-output-begin eyJkYXRhIjoiTlVMTFxuIn0= --&gt;
+</code></pre>
+<p>NULL</p>
+<pre><code>
+
+
+&lt;!-- rnb-output-end --&gt;
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuVmlldyh0ZXN0X2RmKVxuYGBgXG5gYGAifQ== --&gt;
+
+```r
+```r
+View(test_df)</code></pre>
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+## División conjunto test y train
+
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuc2V0LnNlZWQoMzMpXG5cbnRyYWluX3BlcmMgPC0gMC43NVxudHJhaW5faW5kZXggPC0gY3JlYXRlRGF0YVBhcnRpdGlvbihkYXRhJGxhYmVsLCBwPXRyYWluX3BlcmMsIGxpc3Q9RkFMU0UpXG5cbmRhdGFfdHJhaW4gPC0gZGF0YVt0cmFpbl9pbmRleCxdXG5kYXRhX3Rlc3QgPC0gZGF0YVstdHJhaW5faW5kZXgsXVxuYGBgXG5gYGAifQ== --&gt;
+
+```r
+```r
+set.seed(33)
 
 train_perc &lt;- 0.75
 train_index &lt;- createDataPartition(data$label, p=train_perc, list=FALSE)
 
 data_train &lt;- data[train_index,]
 data_test &lt;- data[-train_index,]</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-</div>
-<div id="random-forest-1" class="section level2">
-<h2>Random Forest</h2>
-<p>El segundo algoritmo que vamos a utilizar es el de Random Forest, que
-consiste en construir múltiples árboles de decisión durante el
-entrenamiento y combinar sus resultados para obtener predicciones más
-precisas.</p>
-<p>Para ello, vamos a utilizar la librería <strong>ranger</strong>, que
-es una versión optimizada de <strong>randomForest</strong>, con los
-siguientes parámetros:</p>
-<ul>
-<li><p><em>num.trees=50</em>: El número de árboles que hemos indicado es
-50, pues al incrementar este valor el tiempo de ejecución crece
-significativamente, mientras que el accuracity se muestra prácticamente
-invariable.</p></li>
-<li><p><em>importance=“impurity”</em>: este parámetro se utiliza para
-indicar si se deben calcular las importancias de las variables. Su valor
-por defecto es “none”. Sin embargo, para nuestro modelo le hemos
-indicado que calcule la importancia de las variables basándose en la
-medida de impureza de Gini o ganancia de varianza.</p></li>
-</ul>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucmYgPC0gcmFuZ2VyKGxhYmVsfi4sIGRhdGE9ZGF0YV90cmFpbiwgbnVtLnRyZWVzPTUwLCBpbXBvcnRhbmNlPVwiaW1wdXJpdHlcIilcbnNhdmUocmYsIGZpbGU9XCJyYW5kb21fZm9yZXN0LlJEYXRhXCIpICMgR3VhcmRvIG1pIG1vZGVsb1xucHJpbnQocmYpXG5gYGAifQ== -->
-<pre class="r"><code>rf &lt;- ranger(label~., data=data_train, num.trees=50, importance=&quot;impurity&quot;)
-save(rf, file=&quot;random_forest.RData&quot;) # Guardo mi modelo
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+## Random Forest
+
+El segundo algoritmo que vamos a utilizar es el de Random Forest, que consiste en construir múltiples árboles de decisión durante el entrenamiento y combinar sus resultados para obtener predicciones más precisas.
+
+Para ello, vamos a utilizar la librería **ranger**, que es una versión optimizada de **randomForest**, con los siguientes parámetros:
+
+-   *num.trees=50*: El número de árboles que hemos indicado es 50, pues al incrementar este valor el tiempo de ejecución crece significativamente, mientras que el accuracity se muestra prácticamente invariable.
+
+-   *importance=&quot;impurity&quot;*: este parámetro se utiliza para indicar si se deben calcular las importancias de las variables. Su valor por defecto es &quot;none&quot;. Sin embargo, para nuestro modelo le hemos indicado que calcule la importancia de las variables basándose en la medida de impureza de Gini o ganancia de varianza.
+
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxucmYgPC0gcmFuZ2VyKGxhYmVsfi4sIGRhdGE9ZGF0YV90cmFpbiwgbnVtLnRyZWVzPTUwLCBpbXBvcnRhbmNlPVxcaW1wdXJpdHlcXClcbnNhdmUocmYsIGZpbGU9XFxyYW5kb21fZm9yZXN0LlJEYXRhXFwpICMgR3VhcmRvIG1pIG1vZGVsb1xucHJpbnQocmYpXG5gYGBcbmBgYCJ9 --&gt;
+
+```r
+```r
+rf &lt;- ranger(label~., data=data_train, num.trees=50, importance=\impurity\)
+save(rf, file=\random_forest.RData\) # Guardo mi modelo
 print(rf)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiUmFuZ2VyIHJlc3VsdFxuXG5DYWxsOlxuIHJhbmdlcihsYWJlbCB+IC4sIGRhdGEgPSBkYXRhX3RyYWluLCBudW0udHJlZXMgPSA1MCwgaW1wb3J0YW5jZSA9IFwiaW1wdXJpdHlcIikgXG5cblR5cGU6ICAgICAgICAgICAgICAgICAgICAgICAgICAgICBDbGFzc2lmaWNhdGlvbiBcbk51bWJlciBvZiB0cmVlczogICAgICAgICAgICAgICAgICA1MCBcblNhbXBsZSBzaXplOiAgICAgICAgICAgICAgICAgICAgICAzMTUwMyBcbk51bWJlciBvZiBpbmRlcGVuZGVudCB2YXJpYWJsZXM6ICA3ODQgXG5NdHJ5OiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMjggXG5UYXJnZXQgbm9kZSBzaXplOiAgICAgICAgICAgICAgICAgMSBcblZhcmlhYmxlIGltcG9ydGFuY2UgbW9kZTogICAgICAgICBpbXB1cml0eSBcblNwbGl0cnVsZTogICAgICAgICAgICAgICAgICAgICAgICBnaW5pIFxuT09CIHByZWRpY3Rpb24gZXJyb3I6ICAgICAgICAgICAgIDUuMTEgJSBcbiJ9 -->
-<pre><code>Ranger result
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
 
-Call:
- ranger(label ~ ., data = data_train, num.trees = 50, importance = &quot;impurity&quot;) 
+&lt;!-- rnb-output-begin eyJkYXRhIjoiUmFuZ2VyIHJlc3VsdFxuXG5DYWxsOlxuIHJhbmdlcihsYWJlbCB+IC4sIGRhdGEgPSBkYXRhX3RyYWluLCBudW0udHJlZXMgPSA1MCwgaW1wb3J0YW5jZSA9IFxcaW1wdXJpdHlcXCkgXG5cblR5cGU6ICAgICAgICAgICAgICAgICAgICAgICAgICAgICBDbGFzc2lmaWNhdGlvbiBcbk51bWJlciBvZiB0cmVlczogICAgICAgICAgICAgICAgICA1MCBcblNhbXBsZSBzaXplOiAgICAgICAgICAgICAgICAgICAgICAzMTUwMyBcbk51bWJlciBvZiBpbmRlcGVuZGVudCB2YXJpYWJsZXM6ICA3ODQgXG5NdHJ5OiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMjggXG5UYXJnZXQgbm9kZSBzaXplOiAgICAgICAgICAgICAgICAgMSBcblZhcmlhYmxlIGltcG9ydGFuY2UgbW9kZTogICAgICAgICBpbXB1cml0eSBcblNwbGl0cnVsZTogICAgICAgICAgICAgICAgICAgICAgICBnaW5pIFxuT09CIHByZWRpY3Rpb24gZXJyb3I6ICAgICAgICAgICAgIDUuMTEgJSBcbiJ9 --&gt;
+</code></pre>
+<p>Ranger result</p>
+<p>Call: ranger(label ~ ., data = data_train, num.trees = 50, importance
+= )</p>
+<p>Type: Classification Number of trees: 50 Sample size: 31503 Number of
+independent variables: 784 Mtry: 28 Target node size: 1 Variable
+importance mode: impurity Splitrule: gini OOB prediction error: 5.11
+%</p>
+<pre><code>
 
-Type:                             Classification 
-Number of trees:                  50 
-Sample size:                      31503 
-Number of independent variables:  784 
-Mtry:                             28 
-Target node size:                 1 
-Variable importance mode:         impurity 
-Splitrule:                        gini 
-OOB prediction error:             5.11 % </code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuI2ltcG9ydGFuY2UocmYpXG5gYGAifQ== -->
-<pre class="r"><code>#importance(rf)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucHJlZGljdGlvbl9yZjwtIHByZWRpY3QocmYsIGRhdGFfdGVzdClcblxuY29uZnVzc2lvbl9tYXRyaXhfcmYgPC0gdGFibGUoZGF0YV90ZXN0JGxhYmVsLCBwcmVkaWN0aW9uX3JmJHByZWRpY3Rpb25zKVxuY29uZnVzc2lvbl9tYXRyaXhfcmZcbmBgYCJ9 -->
-<pre class="r"><code>prediction_rf&lt;- predict(rf, data_test)
+
+&lt;!-- rnb-output-end --&gt;
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuI2ltcG9ydGFuY2UocmYpXG5gYGBcbmBgYCJ9 --&gt;
+
+```r
+```r
+#importance(rf)</code></pre>
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxucHJlZGljdGlvbl9yZjwtIHByZWRpY3QocmYsIGRhdGFfdGVzdClcblxuY29uZnVzc2lvbl9tYXRyaXhfcmYgPC0gdGFibGUoZGF0YV90ZXN0JGxhYmVsLCBwcmVkaWN0aW9uX3JmJHByZWRpY3Rpb25zKVxuY29uZnVzc2lvbl9tYXRyaXhfcmZcbmBgYFxuYGBgIn0= --&gt;
+
+```r
+```r
+prediction_rf&lt;- predict(rf, data_test)
 
 confussion_matrix_rf &lt;- table(data_test$label, prediction_rf$predictions)
 confussion_matrix_rf</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucHJlZGljdGlvbl9yZjwtIHByZWRpY3QocmYsIGRhdGFfdGVzdClcblxuY29uZnVzc2lvbl9tYXRyaXhfcmYgPC0gdGFibGUoZGF0YV90ZXN0JGxhYmVsLCBwcmVkaWN0aW9uX3JmJHByZWRpY3Rpb25zKVxuY29uZnVzc2lvbl9tYXRyaXhfcmZcbmBgYCJ9 -->
-<pre class="r"><code>prediction_rf&lt;- predict(rf, data_test)
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxucHJlZGljdGlvbl9yZjwtIHByZWRpY3QocmYsIGRhdGFfdGVzdClcblxuY29uZnVzc2lvbl9tYXRyaXhfcmYgPC0gdGFibGUoZGF0YV90ZXN0JGxhYmVsLCBwcmVkaWN0aW9uX3JmJHByZWRpY3Rpb25zKVxuY29uZnVzc2lvbl9tYXRyaXhfcmZcbmBgYFxuYGBgIn0= --&gt;
+
+```r
+```r
+prediction_rf&lt;- predict(rf, data_test)
 
 confussion_matrix_rf &lt;- table(data_test$label, prediction_rf$predictions)
 confussion_matrix_rf</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiICAgXG4gICAgICAgMCAgICAxICAgIDIgICAgMyAgICA0ICAgIDUgICAgNiAgICA3ICAgIDggICAgOVxuICAwIDEwMjEgICAgMCAgICAwICAgIDAgICAgMCAgICAyICAgIDEgICAgMCAgICA5ICAgIDBcbiAgMSAgICAwIDExNTIgICAgNSAgICA1ICAgIDEgICAgMSAgICAyICAgIDIgICAgMSAgICAyXG4gIDIgICAgNiAgICAyICA5OTIgICAgNyAgIDEyICAgIDIgICAgNCAgIDExICAgIDYgICAgMlxuICAzICAgIDMgICAgMSAgIDE3IDEwMjAgICAgMSAgIDE3ICAgIDEgICAgNiAgIDEyICAgIDlcbiAgNCAgICAwICAgIDIgICAgMyAgICAwICA5NzkgICAgMSAgICA5ICAgIDEgICAgMSAgIDIyXG4gIDUgICAgMyAgICAyICAgIDIgICAxMyAgICAwICA5MDUgICAxMCAgICAyICAgIDYgICAgNVxuICA2ICAgIDUgICAgMCAgICAxICAgIDAgICAgNSAgICA1IDEwMTQgICAgMCAgICA0ICAgIDBcbiAgNyAgICAxICAgIDYgICAxMiAgICAwICAgIDUgICAgMCAgICAwIDEwNjAgICAgMSAgIDE1XG4gIDggICAgNCAgICA4ICAgIDggICAgOSAgICA3ICAgIDUgICAgNyAgICAzICA5NTQgICAxMFxuICA5ICAgIDQgICAgMSAgICA0ICAgMTQgICAxMCAgICAzICAgIDEgICAxMSAgICA1ICA5OTRcbiJ9 -->
-<pre><code>   
-       0    1    2    3    4    5    6    7    8    9
-  0 1021    0    0    0    0    2    1    0    9    0
-  1    0 1152    5    5    1    1    2    2    1    2
-  2    6    2  992    7   12    2    4   11    6    2
-  3    3    1   17 1020    1   17    1    6   12    9
-  4    0    2    3    0  979    1    9    1    1   22
-  5    3    2    2   13    0  905   10    2    6    5
-  6    5    0    1    0    5    5 1014    0    4    0
-  7    1    6   12    0    5    0    0 1060    1   15
-  8    4    8    8    9    7    5    7    3  954   10
-  9    4    1    4   14   10    3    1   11    5  994</code></pre>
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+&lt;!-- rnb-output-begin eyJkYXRhIjoiICAgXG4gICAgICAgMCAgICAxICAgIDIgICAgMyAgICA0ICAgIDUgICAgNiAgICA3ICAgIDggICAgOVxuICAwIDEwMjEgICAgMCAgICAwICAgIDAgICAgMCAgICAyICAgIDEgICAgMCAgICA5ICAgIDBcbiAgMSAgICAwIDExNTIgICAgNSAgICA1ICAgIDEgICAgMSAgICAyICAgIDIgICAgMSAgICAyXG4gIDIgICAgNiAgICAyICA5OTIgICAgNyAgIDEyICAgIDIgICAgNCAgIDExICAgIDYgICAgMlxuICAzICAgIDMgICAgMSAgIDE3IDEwMjAgICAgMSAgIDE3ICAgIDEgICAgNiAgIDEyICAgIDlcbiAgNCAgICAwICAgIDIgICAgMyAgICAwICA5NzkgICAgMSAgICA5ICAgIDEgICAgMSAgIDIyXG4gIDUgICAgMyAgICAyICAgIDIgICAxMyAgICAwICA5MDUgICAxMCAgICAyICAgIDYgICAgNVxuICA2ICAgIDUgICAgMCAgICAxICAgIDAgICAgNSAgICA1IDEwMTQgICAgMCAgICA0ICAgIDBcbiAgNyAgICAxICAgIDYgICAxMiAgICAwICAgIDUgICAgMCAgICAwIDEwNjAgICAgMSAgIDE1XG4gIDggICAgNCAgICA4ICAgIDggICAgOSAgICA3ICAgIDUgICAgNyAgICAzICA5NTQgICAxMFxuICA5ICAgIDQgICAgMSAgICA0ICAgMTQgICAxMCAgICAzICAgIDEgICAxMSAgICA1ICA5OTRcbiJ9 --&gt;
+</code></pre>
+<pre><code>   0    1    2    3    4    5    6    7    8    9</code></pre>
+<p>0 1021 0 0 0 0 2 1 0 9 0 1 0 1152 5 5 1 1 2 2 1 2 2 6 2 992 7 12 2 4
+11 6 2 3 3 1 17 1020 1 17 1 6 12 9 4 0 2 3 0 979 1 9 1 1 22 5 3 2 2 13 0
+905 10 2 6 5 6 5 0 1 0 5 5 1014 0 4 0 7 1 6 12 0 5 0 0 1060 1 15 8 4 8 8
+9 7 5 7 3 954 10 9 4 1 4 14 10 3 1 11 5 994 ```</p>
 <!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 </div>
-</div>
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiUiBOb3RlYm9vayIKb3V0cHV0OiBodG1sX25vdGVib29rCi0tLQoKIyBSYW5kb20gRm9yZXN0CgpgYGB7cn0KbGlicmFyeSAoY2FyZXQpCmxpYnJhcnkocmFuZ2VyKQpgYGAKCmBgYHtyfQpkYXRhIDwtIHJlYWQuY3N2KCJ0cmFpbi5jc3YiKQp0ZXN0X2RmIDwtIHJlYWQuY3N2KCJ0ZXN0LmNzdiIpCgpkYXRhJGxhYmVsIDwtIGFzLmZhY3RvcihkYXRhJGxhYmVsKQpzdW1tYXJ5KGRhdGEkbGFiZWwpCgpkaW0odHJhaW4pClZpZXcodGVzdF9kZikKYGBgCgojIyBEaXZpc2nDs24gY29uanVudG8gdGVzdCB5IHRyYWluCgpgYGB7cn0Kc2V0LnNlZWQoMzMpCgp0cmFpbl9wZXJjIDwtIDAuNzUKdHJhaW5faW5kZXggPC0gY3JlYXRlRGF0YVBhcnRpdGlvbihkYXRhJGxhYmVsLCBwPXRyYWluX3BlcmMsIGxpc3Q9RkFMU0UpCgpkYXRhX3RyYWluIDwtIGRhdGFbdHJhaW5faW5kZXgsXQpkYXRhX3Rlc3QgPC0gZGF0YVstdHJhaW5faW5kZXgsXQpgYGAKCiMjIFJhbmRvbSBGb3Jlc3QKCkVsIHNlZ3VuZG8gYWxnb3JpdG1vIHF1ZSB2YW1vcyBhIHV0aWxpemFyIGVzIGVsIGRlIFJhbmRvbSBGb3Jlc3QsIHF1ZSBjb25zaXN0ZSBlbiBjb25zdHJ1aXIgbcO6bHRpcGxlcyDDoXJib2xlcyBkZSBkZWNpc2nDs24gZHVyYW50ZSBlbCBlbnRyZW5hbWllbnRvIHkgY29tYmluYXIgc3VzIHJlc3VsdGFkb3MgcGFyYSBvYnRlbmVyIHByZWRpY2Npb25lcyBtw6FzIHByZWNpc2FzLgoKUGFyYSBlbGxvLCB2YW1vcyBhIHV0aWxpemFyIGxhIGxpYnJlcsOtYSAqKnJhbmdlcioqLCBxdWUgZXMgdW5hIHZlcnNpw7NuIG9wdGltaXphZGEgZGUgKipyYW5kb21Gb3Jlc3QqKiwgY29uIGxvcyBzaWd1aWVudGVzIHBhcsOhbWV0cm9zOgoKLSAgICpudW0udHJlZXM9NTAqOiBFbCBuw7ptZXJvIGRlIMOhcmJvbGVzIHF1ZSBoZW1vcyBpbmRpY2FkbyBlcyA1MCwgcHVlcyBhbCBpbmNyZW1lbnRhciBlc3RlIHZhbG9yIGVsIHRpZW1wbyBkZSBlamVjdWNpw7NuIGNyZWNlIHNpZ25pZmljYXRpdmFtZW50ZSwgbWllbnRyYXMgcXVlIGVsIGFjY3VyYWNpdHkgc2UgbXVlc3RyYSBwcsOhY3RpY2FtZW50ZSBpbnZhcmlhYmxlLgoKLSAgICppbXBvcnRhbmNlPSJpbXB1cml0eSIqOiBlc3RlIHBhcsOhbWV0cm8gc2UgdXRpbGl6YSBwYXJhIGluZGljYXIgc2kgc2UgZGViZW4gY2FsY3VsYXIgbGFzIGltcG9ydGFuY2lhcyBkZSBsYXMgdmFyaWFibGVzLiBTdSB2YWxvciBwb3IgZGVmZWN0byBlcyAibm9uZSIuIFNpbiBlbWJhcmdvLCBwYXJhIG51ZXN0cm8gbW9kZWxvIGxlIGhlbW9zIGluZGljYWRvIHF1ZSBjYWxjdWxlIGxhIGltcG9ydGFuY2lhIGRlIGxhcyB2YXJpYWJsZXMgYmFzw6FuZG9zZSBlbiBsYSBtZWRpZGEgZGUgaW1wdXJlemEgZGUgR2luaSBvIGdhbmFuY2lhIGRlIHZhcmlhbnphLgoKYGBge3J9CnJmIDwtIHJhbmdlcihsYWJlbH4uLCBkYXRhPWRhdGFfdHJhaW4sIG51bS50cmVlcz01MCwgaW1wb3J0YW5jZT0iaW1wdXJpdHkiKQpzYXZlKHJmLCBmaWxlPSJyYW5kb21fZm9yZXN0LlJEYXRhIikgIyBHdWFyZG8gbWkgbW9kZWxvCiMgUGFyYSB2b2x2ZXIgYSB1c2FybG8sIGRlc2NvbWVudGFyCiNyZl9zYXZlZCA8LSBsb2FkKCJyYW5kb21fZm9yZXN0LlJEYXRhIikKcHJpbnQocmYpCiNpbXBvcnRhbmNlKHJmKQpgYGAKCmBgYHtyfQpwcmVkaWN0aW9uX3JmPC0gcHJlZGljdChyZiwgZGF0YV90ZXN0KQoKY29uZnVzc2lvbl9tYXRyaXhfcmYgPC0gdGFibGUoZGF0YV90ZXN0JGxhYmVsLCBwcmVkaWN0aW9uX3JmJHByZWRpY3Rpb25zKQpjb25mdXNzaW9uX21hdHJpeF9yZgpgYGAKCmBgYHtyfQphY2N1cmFjeV9yZiA8LSBtZWFuKHByZWRpY3Rpb25fcmYkcHJlZGljdGlvbnMgPT0gZGF0YV90ZXN0JGxhYmVsKQpjYXQoIkFjY3VyYWN5IHdpdGggcmFuZG9tIGZvcmVzdDoiLCBhY2N1cmFjeV9yZikgIyAwLjk2CmBgYAo=</div>
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIlIgTm90ZWJvb2siDQpvdXRwdXQ6IGh0bWxfbm90ZWJvb2sNCi0tLQ0KDQojIFJhbmRvbSBGb3Jlc3QNCg0KYGBge3J9DQpsaWJyYXJ5IChjYXJldCkNCmxpYnJhcnkocmFuZ2VyKQ0KYGBgDQoNCmBgYHtyfQ0KZGF0YSA8LSByZWFkLmNzdigidHJhaW4uY3N2IikNCnRlc3RfZGYgPC0gcmVhZC5jc3YoInRlc3QuY3N2IikNCg0KZGF0YSRsYWJlbCA8LSBhcy5mYWN0b3IoZGF0YSRsYWJlbCkNCnN1bW1hcnkoZGF0YSRsYWJlbCkNCg0KZGltKHRyYWluKQ0KVmlldyh0ZXN0X2RmKQ0KYGBgDQoNCiMjIERpdmlzacOzbiBjb25qdW50byB0ZXN0IHkgdHJhaW4NCg0KYGBge3J9DQpzZXQuc2VlZCgzMykNCg0KdHJhaW5fcGVyYyA8LSAwLjc1DQp0cmFpbl9pbmRleCA8LSBjcmVhdGVEYXRhUGFydGl0aW9uKGRhdGEkbGFiZWwsIHA9dHJhaW5fcGVyYywgbGlzdD1GQUxTRSkNCg0KZGF0YV90cmFpbiA8LSBkYXRhW3RyYWluX2luZGV4LF0NCmRhdGFfdGVzdCA8LSBkYXRhWy10cmFpbl9pbmRleCxdDQpgYGANCg0KIyMgUmFuZG9tIEZvcmVzdA0KDQpFbCBzZWd1bmRvIGFsZ29yaXRtbyBxdWUgdmFtb3MgYSB1dGlsaXphciBlcyBlbCBkZSBSYW5kb20gRm9yZXN0LCBxdWUgY29uc2lzdGUgZW4gY29uc3RydWlyIG3Dumx0aXBsZXMgw6FyYm9sZXMgZGUgZGVjaXNpw7NuIGR1cmFudGUgZWwgZW50cmVuYW1pZW50byB5IGNvbWJpbmFyIHN1cyByZXN1bHRhZG9zIHBhcmEgb2J0ZW5lciBwcmVkaWNjaW9uZXMgbcOhcyBwcmVjaXNhcy4NCg0KUGFyYSBlbGxvLCB2YW1vcyBhIHV0aWxpemFyIGxhIGxpYnJlcsOtYSAqKnJhbmdlcioqLCBxdWUgZXMgdW5hIHZlcnNpw7NuIG9wdGltaXphZGEgZGUgKipyYW5kb21Gb3Jlc3QqKiwgY29uIGxvcyBzaWd1aWVudGVzIHBhcsOhbWV0cm9zOg0KDQotICAgKm51bS50cmVlcz01MCo6IEVsIG7Dum1lcm8gZGUgw6FyYm9sZXMgcXVlIGhlbW9zIGluZGljYWRvIGVzIDUwLCBwdWVzIGFsIGluY3JlbWVudGFyIGVzdGUgdmFsb3IgZWwgdGllbXBvIGRlIGVqZWN1Y2nDs24gY3JlY2Ugc2lnbmlmaWNhdGl2YW1lbnRlLCBtaWVudHJhcyBxdWUgZWwgYWNjdXJhY2l0eSBzZSBtdWVzdHJhIHByw6FjdGljYW1lbnRlIGludmFyaWFibGUuDQoNCi0gICAqaW1wb3J0YW5jZT0iaW1wdXJpdHkiKjogZXN0ZSBwYXLDoW1ldHJvIHNlIHV0aWxpemEgcGFyYSBpbmRpY2FyIHNpIHNlIGRlYmVuIGNhbGN1bGFyIGxhcyBpbXBvcnRhbmNpYXMgZGUgbGFzIHZhcmlhYmxlcy4gU3UgdmFsb3IgcG9yIGRlZmVjdG8gZXMgIm5vbmUiLiBTaW4gZW1iYXJnbywgcGFyYSBudWVzdHJvIG1vZGVsbyBsZSBoZW1vcyBpbmRpY2FkbyBxdWUgY2FsY3VsZSBsYSBpbXBvcnRhbmNpYSBkZSBsYXMgdmFyaWFibGVzIGJhc8OhbmRvc2UgZW4gbGEgbWVkaWRhIGRlIGltcHVyZXphIGRlIEdpbmkgbyBnYW5hbmNpYSBkZSB2YXJpYW56YS4NCg0KYGBge3J9DQpyZiA8LSByYW5nZXIobGFiZWx+LiwgZGF0YT1kYXRhX3RyYWluLCBudW0udHJlZXM9NTAsIGltcG9ydGFuY2U9ImltcHVyaXR5IikNCnNhdmUocmYsIGZpbGU9InJhbmRvbV9mb3Jlc3QuUkRhdGEiKSAjIEd1YXJkbyBtaSBtb2RlbG8NCiMgUGFyYSB2b2x2ZXIgYSB1c2FybG8sIGRlc2NvbWVudGFyDQojcmZfc2F2ZWQgPC0gbG9hZCgicmFuZG9tX2ZvcmVzdC5SRGF0YSIpDQpwcmludChyZikNCiNpbXBvcnRhbmNlKHJmKQ0KYGBgDQoNCmBgYHtyfQ0KcHJlZGljdGlvbl9yZjwtIHByZWRpY3QocmYsIGRhdGFfdGVzdCkNCg0KY29uZnVzc2lvbl9tYXRyaXhfcmYgPC0gdGFibGUoZGF0YV90ZXN0JGxhYmVsLCBwcmVkaWN0aW9uX3JmJHByZWRpY3Rpb25zKQ0KY29uZnVzc2lvbl9tYXRyaXhfcmYNCmBgYA0KDQpgYGB7cn0NCmFjY3VyYWN5X3JmIDwtIG1lYW4ocHJlZGljdGlvbl9yZiRwcmVkaWN0aW9ucyA9PSBkYXRhX3Rlc3QkbGFiZWwpDQpjYXQoIkFjY3VyYWN5IHdpdGggcmFuZG9tIGZvcmVzdDoiLCBhY2N1cmFjeV9yZikgIyAwLjk2DQpgYGANCg==</div>
 
 
 

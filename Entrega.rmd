@@ -64,7 +64,7 @@ image(rotate(sample_7), col = grey.colors(255))
 
 ## Random Forest
 
-El segundo algoritmo que vamos a utilizar es el de Random Forest, que consiste en construir múltiples árboles de decisión durante el entrenamiento y combinar sus resultados para obtener predicciones más precisas.
+El primer algoritmo que vamos a utilizar es el de Random Forest, que consiste en construir múltiples árboles de decisión durante el entrenamiento y combinar sus resultados para obtener predicciones más precisas.
 
 Para ello, vamos a utilizar la librería **ranger**, que es una versión optimizada de **randomForest**, con los siguientes parámetros:
 
@@ -102,6 +102,8 @@ accuracy_rf <- mean(prediction_rf$predictions == data_test$label)
 cat("Accuracy with random forest:", accuracy_rf) # 0.96
 ```
 
+## Miguel Ángel
+
 ## Red neuronal sencilla
 
 ```{r}
@@ -131,7 +133,9 @@ confussion_matrix
 
 ```{r}
 accuracy_simple_nnet <- mean(prediction_simple_nnet == data_test$label)
-accuracy_simple_nnet
+cat("Accuracy with a simple neural network:", accuracy_simple_nnet) 
 
 # Obtenemos un accuracy cercano al 90% no está mal pero vamos a intentar mejorarlo
 ```
+
+## 
