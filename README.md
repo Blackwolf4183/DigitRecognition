@@ -1,2 +1,3 @@
 # DigitRecognition
-Práctica de reconocimiento de dígitos con varios modelos 
+
+Digit recognition lab for college class using a few machine learning algorithms in a jupyter notebook
